@@ -23,6 +23,8 @@ if ! command -v asdf >/dev/null 2>&1; then
   if ! grep -q 'asdf.sh' "${HOME}/.zshrc" 2>/dev/null; then
     echo -e '\n# asdf version manager\n. $(brew --prefix)/opt/asdf/libexec/asdf.sh' >> "${HOME}/.zshrc"
   fi
+  # Load asdf for current session
+  . $(brew --prefix)/opt/asdf/libexec/asdf.sh
 fi
 
 # --- asdf plugins (optional; use .tool-versions if present) ---
@@ -36,6 +38,10 @@ if [ -f "${HOME}/.tool-versions" ]; then
 fi
 
 # --- Git defaults (idempotent) ---
+# Create global .gitignore if it doesn't exist
+if [ ! -f "${HOME}/.gitignore_global" ]; then
+  touch "${HOME}/.gitignore_global"
+fi
 git config --global init.defaultBranch main
 git config --global core.excludesfile "${HOME}/.gitignore_global"
 git config --global pull.rebase false

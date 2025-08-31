@@ -26,6 +26,10 @@ if (-not (Test-Path "$env:USERPROFILE\.asdf\asdf.ps1")) {
 # Ensure asdf is loaded in PowerShell profile
 $ProfilePath = $PROFILE
 if (-not (Test-Path $ProfilePath)) {
+  $ProfileDir = Split-Path -Path $ProfilePath -Parent
+  if (-not (Test-Path $ProfileDir)) {
+    New-Item -ItemType Directory -Path $ProfileDir -Force | Out-Null
+  }
   New-Item -ItemType File -Path $ProfilePath -Force | Out-Null
 }
 $asdfLine = 'if (Test-Path "$env:USERPROFILE\.asdf\asdf.ps1") { . "$env:USERPROFILE\.asdf\asdf.ps1" }'
@@ -40,6 +44,11 @@ if (-not (Get-Command docker.exe -ErrorAction SilentlyContinue)) {
 }
 
 # --- Git defaults (idempotent) ---
+# Create global .gitignore if it doesn't exist
+$GitIgnoreGlobal = "$env:USERPROFILE\.gitignore_global"
+if (-not (Test-Path $GitIgnoreGlobal)) {
+  New-Item -ItemType File -Path $GitIgnoreGlobal -Force | Out-Null
+}
 git config --global init.defaultBranch main
 git config --global core.excludesfile "$env:USERPROFILE\.gitignore_global"
 git config --global pull.rebase false

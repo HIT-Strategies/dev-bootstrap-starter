@@ -17,7 +17,9 @@ if ! command -v asdf >/dev/null 2>&1; then
   echo "[Linux] Installing asdf…"
   # Install to $HOME/.asdf (official)
   if [ ! -d "${HOME}/.asdf" ]; then
-    git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf" --branch v0.14.0
+    git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf"
+    cd "${HOME}/.asdf"
+    git checkout "$(git describe --abbrev=0 --tags)"
   fi
   # Shell integration (zsh OR bash)
   if [ -n "${ZSH_VERSION-}" ]; then
@@ -48,6 +50,10 @@ if [ -f "${HOME}/.tool-versions" ]; then
 fi
 
 # --- Git defaults (idempotent) ---
+# Create global .gitignore if it doesn't exist
+if [ ! -f "${HOME}/.gitignore_global" ]; then
+  touch "${HOME}/.gitignore_global"
+fi
 git config --global init.defaultBranch main
 git config --global core.excludesfile "${HOME}/.gitignore_global"
 git config --global pull.rebase false
@@ -58,6 +64,7 @@ if ! command -v docker >/dev/null 2>&1; then
   # Official Docker Engine install (Ubuntu)
   sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
   sudo apt-get install -y apt-transport-https gnupg lsb-release
+  sudo mkdir -p /usr/share/keyrings
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
   echo         "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu         $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
   sudo apt-get update -y
