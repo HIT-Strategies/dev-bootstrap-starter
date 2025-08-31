@@ -5,6 +5,9 @@ v1 installs:
 - asdf (and installs plugins from `~/.tool-versions` if present)
 - basic Git defaults
 - Docker (Desktop on macOS; Engine on Linux)
+- GitHub CLI
+- Azure CLI
+- oh-my-zsh (optional)
 
 ## Quick start
 
@@ -14,10 +17,20 @@ chmod +x provision/macos.sh
 ./provision/macos.sh
 ```
 
+To also install oh-my-zsh:
+```bash
+INSTALL_OHMYZSH=1 ./provision/macos.sh
+```
+
 ### Linux
 ```bash
 chmod +x provision/linux.sh
 ./provision/linux.sh
+```
+
+To also install oh-my-zsh:
+```bash
+INSTALL_OHMYZSH=1 ./provision/linux.sh
 ```
 
 ### Windows (use WSL)

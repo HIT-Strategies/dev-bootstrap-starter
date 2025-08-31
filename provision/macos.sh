@@ -53,4 +53,27 @@ if ! command -v docker >/dev/null 2>&1; then
   echo "[macOS] Launch Docker.app from /Applications on first run."
 fi
 
+# --- GitHub CLI ---
+if ! command -v gh >/dev/null 2>&1; then
+  echo "[macOS] Installing GitHub CLI…"
+  brew install gh
+fi
+
+# --- Azure CLI ---
+if ! command -v az >/dev/null 2>&1; then
+  echo "[macOS] Installing Azure CLI…"
+  brew install azure-cli
+fi
+
+# --- oh-my-zsh (optional) ---
+if [ "${INSTALL_OHMYZSH:-}" = "1" ]; then
+  if [ ! -d "${HOME}/.oh-my-zsh" ]; then
+    echo "[macOS] Installing oh-my-zsh…"
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    echo "[macOS] oh-my-zsh installed. Consider switching to zsh with 'chsh -s \$(which zsh)'"
+  else
+    echo "[macOS] oh-my-zsh already installed."
+  fi
+fi
+
 echo "[macOS] Done."
