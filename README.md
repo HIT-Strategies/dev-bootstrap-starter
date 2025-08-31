@@ -39,7 +39,13 @@ If you're on a brand new Windows machine:
 
 3. **Complete Ubuntu setup** (create username/password when prompted)
 
-4. **Follow the Linux instructions below**
+4. **IMPORTANT - Work from Linux filesystem:**
+   ```bash
+   cd ~  # Navigate to /home/username, NOT /mnt/c/...
+   pwd   # Should show /home/yourusername
+   ```
+
+5. **Follow the Linux instructions below** (make sure you're in your Linux home directory)
 
 ## Quick start
 
@@ -67,6 +73,8 @@ INSTALL_OHMYZSH=1 ./provision/linux.sh
 
 ### Windows (use WSL)
 Windows users should use WSL (Windows Subsystem for Linux) and follow the Linux instructions above.
+
+**⚠️ WSL Important:** Always run from your Linux home directory (`/home/username`), never from Windows filesystem paths (`/mnt/c/...`). The bootstrap will not work correctly from Windows filesystem locations.
 
 ## Next Steps (Manual Setup)
 
