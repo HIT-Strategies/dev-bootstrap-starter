@@ -68,8 +68,55 @@ INSTALL_OHMYZSH=1 ./provision/linux.sh
 ### Windows (use WSL)
 Windows users should use WSL (Windows Subsystem for Linux) and follow the Linux instructions above.
 
+## Next Steps (Manual Setup)
+
+After running the bootstrap, you'll need to set up your personal credentials and preferences:
+
+### 1. SSH Keys for GitHub
+```bash
+# Generate a new SSH key
+ssh-keygen -t ed25519 -C "your.email@example.com"
+
+# Add to SSH agent
+ssh-add ~/.ssh/id_ed25519
+
+# Copy public key to clipboard (macOS)
+pbcopy < ~/.ssh/id_ed25519.pub
+
+# Copy public key to clipboard (Linux)
+cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard
+```
+
+Then add the public key to your GitHub account: **GitHub → Settings → SSH and GPG keys → New SSH key**
+
+### 2. Authenticate CLI Tools
+```bash
+# GitHub CLI
+gh auth login
+
+# Azure CLI (if you use Azure)
+az login
+
+# Claude Code CLI
+claude auth
+```
+
+### 3. Configure Git Identity
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+### 4. Create Your .tool-versions File
+Create `~/.tool-versions` with your preferred language versions:
+```
+nodejs 20.11.0
+python 3.12.1
+golang 1.21.6
+terraform 1.6.6
+```
+
 ## Optional
-- Put a `.tool-versions` in your `$HOME` to let asdf auto-install your toolchains.
 - Re-run these scripts any time; they are safe to re-run and will only install what's missing.
-- Next steps (future versions): SSH key helper, direnv, chezmoi for dotfiles, VS Code/Neovim config, GitHub CLI auth.
+- Future versions may include: direnv, chezmoi for dotfiles, VS Code/Neovim config.
 ```
