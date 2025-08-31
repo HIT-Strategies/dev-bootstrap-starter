@@ -22,9 +22,9 @@ v1 installs:
 - WSL (Windows Subsystem for Linux) must be installed first
 
 **Getting this bootstrap on a fresh machine:**
-1. **If git is available:** `git clone https://github.com/your-username/dev-bootstrap-starter.git`
+1. **If git is available:** `git clone https://github.com/HIT-Strategies/dev-bootstrap-starter.git`
 2. **If git is not available:** Download the zip file from GitHub and extract it
-3. **One-liner option:** `curl -fsSL https://raw.githubusercontent.com/your-username/dev-bootstrap-starter/main/provision/linux.sh | bash` (Linux/WSL only)
+3. **One-liner option:** `curl -fsSL https://raw.githubusercontent.com/HIT-Strategies/dev-bootstrap-starter/main/provision/linux.sh | bash` (Linux/WSL only)
 
 ## Fresh Windows Setup (WSL)
 
