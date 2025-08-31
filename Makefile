@@ -4,7 +4,7 @@
 	bash provision/macos.sh
 
     linux:
-	bash provision/ubuntu_wsl.sh
+	bash provision/linux.sh
 
     wsl:
-	bash provision/ubuntu_wsl.sh
+	bash provision/linux.sh

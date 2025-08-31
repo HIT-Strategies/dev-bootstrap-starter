@@ -1,10 +1,10 @@
 # dev-bootstrap-starter
 
-Minimal, idempotent dev environment bootstrap for macOS and Ubuntu/WSL.
+Minimal, idempotent dev environment bootstrap for macOS and Linux.
 v1 installs:
 - asdf (and installs plugins from `~/.tool-versions` if present)
 - basic Git defaults
-- Docker (Desktop on macOS; Engine on Ubuntu/WSL)
+- Docker (Desktop on macOS; Engine on Linux)
 
 ## Quick start
 
@@ -14,14 +14,14 @@ chmod +x provision/macos.sh
 ./provision/macos.sh
 ```
 
-### Ubuntu / WSL
+### Linux
 ```bash
-chmod +x provision/ubuntu_wsl.sh
-./provision/ubuntu_wsl.sh
+chmod +x provision/linux.sh
+./provision/linux.sh
 ```
 
 ### Windows (use WSL)
-Windows users should use WSL (Windows Subsystem for Linux) and follow the Ubuntu/WSL instructions above.
+Windows users should use WSL (Windows Subsystem for Linux) and follow the Linux instructions above.
 
 ## Optional
 - Put a `.tool-versions` in your `$HOME` to let asdf auto-install your toolchains.
