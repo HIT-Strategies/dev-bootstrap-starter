@@ -1,0 +1,4 @@
+# Copy this file to $HOME/.tool-versions and adjust versions as needed
+golang 1.25.0
+nodejs 22.5.1
+python 3.12.5
