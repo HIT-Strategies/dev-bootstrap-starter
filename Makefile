@@ -1,4 +1,4 @@
-.PHONY: mac linux wsl windows
+.PHONY: mac linux wsl
 
     mac:
 	bash provision/macos.sh
@@ -8,6 +8,3 @@
 
     wsl:
 	bash provision/ubuntu_wsl.sh
-
-    windows:
-	powershell -ExecutionPolicy Bypass -File provision/windows.ps1
