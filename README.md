@@ -11,6 +11,36 @@ v1 installs:
 - Claude Code CLI (via pnpm)
 - oh-my-zsh (optional)
 
+## Prerequisites
+
+**All platforms:**
+- Internet connection
+- Terminal/shell access
+- `curl` available (usually pre-installed)
+
+**Windows users:**
+- WSL (Windows Subsystem for Linux) must be installed first
+
+**Getting this bootstrap on a fresh machine:**
+1. **If git is available:** `git clone https://github.com/your-username/dev-bootstrap-starter.git`
+2. **If git is not available:** Download the zip file from GitHub and extract it
+3. **One-liner option:** `curl -fsSL https://raw.githubusercontent.com/your-username/dev-bootstrap-starter/main/provision/linux.sh | bash` (Linux/WSL only)
+
+## Fresh Windows Setup (WSL)
+
+If you're on a brand new Windows machine:
+
+1. **Install WSL** (run as Administrator in PowerShell):
+   ```powershell
+   wsl --install
+   ```
+
+2. **Restart your computer** when prompted
+
+3. **Complete Ubuntu setup** (create username/password when prompted)
+
+4. **Follow the Linux instructions below**
+
 ## Quick start
 
 ### macOS
