@@ -7,6 +7,8 @@ v1 installs:
 - Docker (Desktop on macOS; Engine on Linux)
 - GitHub CLI
 - Azure CLI
+- pnpm (if Node.js is available via asdf)
+- Claude Code CLI (via pnpm)
 - oh-my-zsh (optional)
 
 ## Quick start

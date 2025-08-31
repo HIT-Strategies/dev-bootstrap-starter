@@ -99,6 +99,18 @@ if ! command -v az >/dev/null 2>&1; then
   curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 fi
 
+# --- pnpm (if Node.js is available) ---
+if command -v node >/dev/null 2>&1 && ! command -v pnpm >/dev/null 2>&1; then
+  echo "[Linux] Installing pnpm…"
+  npm install -g pnpm
+fi
+
+# --- Claude Code CLI (if pnpm is available) ---
+if command -v pnpm >/dev/null 2>&1 && ! command -v claude >/dev/null 2>&1; then
+  echo "[Linux] Installing Claude Code CLI…"
+  pnpm install -g @anthropic-ai/claude-code
+fi
+
 # --- oh-my-zsh (optional) ---
 if [ "${INSTALL_OHMYZSH:-}" = "1" ]; then
   if [ ! -d "${HOME}/.oh-my-zsh" ]; then
