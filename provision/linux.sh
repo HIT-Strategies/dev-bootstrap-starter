@@ -9,6 +9,12 @@ echo "[Linux] Updating apt…"
 sudo apt-get update -y
 sudo apt-get install -y curl git build-essential ca-certificates
 
+# --- neovim ---
+if ! command -v nvim >/dev/null 2>&1; then
+  echo "[Linux] Installing Neovim…"
+  sudo apt-get install -y neovim
+fi
+
 # --- asdf prerequisites ---
 sudo apt-get install -y unzip libssl-dev zlib1g-dev
 

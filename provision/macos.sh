@@ -15,6 +15,12 @@ if ! command -v git >/dev/null 2>&1; then
   brew install git
 fi
 
+# --- neovim ---
+if ! command -v nvim >/dev/null 2>&1; then
+  echo "[macOS] Installing Neovim…"
+  brew install neovim
+fi
+
 # --- asdf ---
 if ! command -v asdf >/dev/null 2>&1; then
   echo "[macOS] Installing asdf…"
