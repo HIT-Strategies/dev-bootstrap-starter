@@ -115,7 +115,15 @@ if [ "${INSTALL_OHMYZSH:-}" = "1" ]; then
   if [ ! -d "${HOME}/.oh-my-zsh" ]; then
     echo "[macOS] Installing oh-my-zsh…"
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    echo "[macOS] oh-my-zsh installed. Consider switching to zsh with 'chsh -s \$(which zsh)'"
+    echo "[macOS] oh-my-zsh installed. Switching to zsh as default shell..."
+    
+    # Change default shell to zsh if not already set
+    if [ "${SHELL}" != "$(which zsh)" ]; then
+      chsh -s "$(which zsh)"
+      echo "[macOS] Default shell changed to zsh. Please restart your terminal or run 'exec zsh' to use the new shell."
+    else
+      echo "[macOS] zsh is already the default shell."
+    fi
   else
     echo "[macOS] oh-my-zsh already installed."
   fi

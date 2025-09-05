@@ -149,7 +149,15 @@ if [ "${INSTALL_OHMYZSH:-}" = "1" ]; then
   if [ ! -d "${HOME}/.oh-my-zsh" ]; then
     echo "[Linux] Installing oh-my-zsh…"
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    echo "[Linux] oh-my-zsh installed. Consider switching to zsh with 'chsh -s \$(which zsh)'"
+    echo "[Linux] oh-my-zsh installed. Switching to zsh as default shell..."
+    
+    # Change default shell to zsh if not already set
+    if [ "${SHELL}" != "$(which zsh)" ]; then
+      chsh -s "$(which zsh)"
+      echo "[Linux] Default shell changed to zsh. Please restart your terminal or run 'exec zsh' to use the new shell."
+    else
+      echo "[Linux] zsh is already the default shell."
+    fi
   else
     echo "[Linux] oh-my-zsh already installed."
   fi
