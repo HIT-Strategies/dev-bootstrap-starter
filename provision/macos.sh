@@ -41,6 +41,27 @@ if [ -f "${HOME}/.tool-versions" ]; then
     asdf plugin add "$plugin" || true
   done
   asdf install
+  
+  # Install Go development tools after Go is available
+  if command -v go >/dev/null 2>&1; then
+    echo "[macOS] Installing Go development tools…"
+    
+    # Install delve debugger
+    if ! command -v dlv >/dev/null 2>&1; then
+      echo "[macOS] Installing delve (Go debugger)…"
+      go install github.com/go-delve/delve/cmd/dlv@latest
+      asdf reshim golang || true
+    fi
+    
+    # Verify tools are available
+    echo "[macOS] Verifying Go development tools…"
+    if ! command -v golangci-lint >/dev/null 2>&1; then
+      echo "[macOS] golangci-lint not found in PATH, may need to restart shell or run 'asdf reshim golang'"
+    fi
+    if ! command -v dlv >/dev/null 2>&1; then
+      echo "[macOS] delve (dlv) not found in PATH, may need to restart shell or run 'asdf reshim golang'"
+    fi
+  fi
 fi
 
 # --- Git defaults (idempotent) ---
