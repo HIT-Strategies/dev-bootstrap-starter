@@ -15,6 +15,12 @@ if ! command -v nvim >/dev/null 2>&1; then
   sudo apt-get install -y neovim
 fi
 
+# --- tmux ---
+if ! command -v tmux >/dev/null 2>&1; then
+  echo "[Linux] Installing tmux…"
+  sudo apt-get install -y tmux
+fi
+
 # --- asdf prerequisites ---
 sudo apt-get install -y unzip libssl-dev zlib1g-dev
 

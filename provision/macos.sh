@@ -21,6 +21,12 @@ if ! command -v nvim >/dev/null 2>&1; then
   brew install neovim
 fi
 
+# --- tmux ---
+if ! command -v tmux >/dev/null 2>&1; then
+  echo "[macOS] Installing tmux…"
+  brew install tmux
+fi
+
 # --- asdf ---
 if ! command -v asdf >/dev/null 2>&1; then
   echo "[macOS] Installing asdf…"
