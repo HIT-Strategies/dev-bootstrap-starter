@@ -155,4 +155,15 @@ if [ "${INSTALL_OHMYZSH:-}" = "1" ]; then
   fi
 fi
 
+# --- Personal configurations (optional) ---
+if [ "${PERSONAL_CONFIG:-}" = "1" ]; then
+  PERSONAL_SCRIPT="$(dirname "$0")/personal/linux.sh"
+  if [ -f "$PERSONAL_SCRIPT" ]; then
+    echo "[Linux] Running personal configurations..."
+    bash "$PERSONAL_SCRIPT"
+  else
+    echo "[Linux] Personal configuration script not found at $PERSONAL_SCRIPT"
+  fi
+fi
+
 echo "[Linux] Done."

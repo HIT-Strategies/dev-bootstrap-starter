@@ -1,15 +1,26 @@
 # dev-bootstrap-starter
 
-Minimal, idempotent dev environment bootstrap for macOS and Linux.
-v1 installs:
-- asdf (and installs plugins from `~/.tool-versions` if present)
-- basic Git defaults
-- Docker (Desktop on macOS; Engine on Linux)
-- GitHub CLI
-- Azure CLI
-- pnpm (if Node.js is available via asdf)
-- Claude Code CLI (via pnpm)
-- oh-my-zsh (optional)
+Comprehensive dev environment bootstrap for macOS and Linux with GitHub onboarding wizard.
+
+## Core Tools Installed
+- **asdf** - Version manager (installs plugins from `~/.tool-versions` if present)
+- **Git** - Version control with sensible defaults
+- **NeoVim** - Modern text editor
+- **tmux** - Terminal multiplexer
+- **Docker** - Container platform (Desktop on macOS; Engine on Linux)
+- **GitHub CLI** - GitHub command-line interface
+- **Azure CLI** - Azure command-line interface  
+- **pnpm** - Fast Node.js package manager (if Node.js available)
+- **Claude Code CLI** - AI coding assistant (via pnpm)
+- **oh-my-zsh** - Enhanced shell (optional)
+
+## Personal Development Tools (Optional)
+- **gopls** - Go language server for NeoVim
+- **gofumpt** - Stricter Go formatter
+- **staticcheck** - Go static analysis tool
+- Basic **NeoVim configuration** with Go support
+- Basic **tmux configuration** 
+- Enhanced **Git configurations**
 
 ## Prerequisites
 
@@ -47,61 +58,66 @@ If you're on a brand new Windows machine:
 
 5. **Follow the Linux instructions below** (make sure you're in your Linux home directory)
 
-## Quick start
+## Quick Start
 
-### macOS
+### Step 1: Install Core Tools
+
+**macOS:**
 ```bash
 chmod +x provision/macos.sh
 ./provision/macos.sh
 ```
 
-To also install oh-my-zsh:
-```bash
-INSTALL_OHMYZSH=1 ./provision/macos.sh
-```
-
-### Linux
+**Linux:**
 ```bash
 chmod +x provision/linux.sh
 ./provision/linux.sh
 ```
 
-To also install oh-my-zsh:
+**With optional features:**
 ```bash
-INSTALL_OHMYZSH=1 ./provision/linux.sh
+# Install oh-my-zsh
+INSTALL_OHMYZSH=1 ./provision/macos.sh
+
+# Install personal configurations (NeoVim, tmux, Go tools)
+PERSONAL_CONFIG=1 ./provision/macos.sh
+
+# Install both
+INSTALL_OHMYZSH=1 PERSONAL_CONFIG=1 ./provision/macos.sh
 ```
 
-### Windows (use WSL)
-Windows users should use WSL (Windows Subsystem for Linux) and follow the Linux instructions above.
-
-**⚠️ WSL Important:** Always run from your Linux home directory (`/home/username`), never from Windows filesystem paths (`/mnt/c/...`). The bootstrap will not work correctly from Windows filesystem locations.
-
-## Next Steps (Manual Setup)
-
-After running the bootstrap, you'll need to set up your personal credentials and preferences:
-
-### 1. SSH Keys for GitHub
+### Step 2: GitHub Setup (Interactive Wizard)
 ```bash
-# Generate a new SSH key
-ssh-keygen -t ed25519 -C "your.email@example.com"
-
-# Add to SSH agent
-ssh-add ~/.ssh/id_ed25519
-
-# Copy public key to clipboard (macOS)
-pbcopy < ~/.ssh/id_ed25519.pub
-
-# Copy public key to clipboard (Linux)
-cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard
+./scripts/github-setup.sh
 ```
+This wizard will:
+- Configure Git user information
+- Generate and set up SSH keys
+- Add SSH key to GitHub account
+- Set up GPG signing for verified commits (optional)
+- Test GitHub connectivity
 
-Then add the public key to your GitHub account: **GitHub → Settings → SSH and GPG keys → New SSH key**
-
-### 2. Authenticate CLI Tools
+### Step 3: Clone Company Repository
 ```bash
-# GitHub CLI
-gh auth login
+./scripts/repo-clone.sh
+```
+This script will:
+- Clone your company repository
+- Set up the local development environment
+- Install project dependencies
+- Run tests to verify setup
 
+### Windows (WSL)
+Windows users should use WSL and follow the Linux instructions above.
+
+**⚠️ WSL Important:** Always run from your Linux home directory (`/home/username`), never from Windows filesystem paths (`/mnt/c/...`).
+
+## Manual Steps (if needed)
+
+The GitHub setup wizard handles most authentication, but you may need:
+
+### Authenticate Additional CLI Tools
+```bash
 # Azure CLI (if you use Azure)
 az login
 
@@ -109,13 +125,7 @@ az login
 claude auth
 ```
 
-### 3. Configure Git Identity
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
-```
-
-### 4. Create Your .tool-versions File
+### Create Your .tool-versions File
 Create `~/.tool-versions` with your preferred language versions:
 ```
 nodejs 20.11.0
@@ -123,6 +133,35 @@ python 3.12.1
 golang 1.21.6
 terraform 1.6.6
 ```
+
+## Advanced Usage
+
+### Personal Configuration Details
+When using `PERSONAL_CONFIG=1`, the following are configured:
+- **NeoVim**: Basic configuration with Go-specific settings
+- **tmux**: Enhanced configuration with better key bindings
+- **Go tools**: gopls, gofumpt, staticcheck for development
+- **Git**: Additional productivity settings
+
+### Directory Structure
+```
+dev-bootstrap-starter/
+├── provision/
+│   ├── macos.sh              # Core macOS setup
+│   ├── linux.sh              # Core Linux setup
+│   └── personal/
+│       ├── macos.sh          # Personal macOS configurations
+│       └── linux.sh          # Personal Linux configurations
+└── scripts/
+    ├── github-setup.sh       # GitHub authentication wizard
+    └── repo-clone.sh         # Repository cloning and setup
+```
+
+### Customizing Personal Configurations
+To customize the personal configurations:
+1. Edit `provision/personal/macos.sh` or `provision/personal/linux.sh`
+2. Add your preferred NeoVim plugins, tmux settings, or additional tools
+3. Re-run with `PERSONAL_CONFIG=1` to apply changes
 
 ## Optional
 - Re-run these scripts any time; they are safe to re-run and will only install what's missing.
