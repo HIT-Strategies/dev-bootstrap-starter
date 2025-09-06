@@ -34,7 +34,7 @@ if ! command -v asdf >/dev/null 2>&1; then
   if [ ! -d "${HOME}/.asdf" ]; then
     git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf"
     cd "${HOME}/.asdf"
-    git checkout "$(git describe --abbrev=0 --tags)"
+    git checkout "v0.16.0"
   fi
   # Shell integration (zsh OR bash)
   if [ -n "${ZSH_VERSION-}" ]; then
