@@ -51,11 +51,38 @@ install_go_dev_tools "macOS"
 # --- Git defaults (idempotent) ---
 configure_git_defaults
 
-# --- Docker Desktop ---
+# --- Docker via Colima ---
 if ! command -v docker >/dev/null 2>&1; then
-  echo "[macOS] Installing Docker Desktop…"
-  brew install --cask docker
-  echo "[macOS] Launch Docker.app from /Applications on first run."
+  echo "[macOS] Installing Docker via Colima…"
+  brew install docker docker-compose
+  brew install colima
+  
+  # Ensure clean Docker config for Colima (remove Docker Desktop credential store)
+  mkdir -p "${HOME}/.docker"
+  if [ -f "${HOME}/.docker/config.json" ] && grep -q '"credsStore": "desktop"' "${HOME}/.docker/config.json"; then
+    echo "[macOS] Removing Docker Desktop credential store from config..."
+    sed -i '' '/"credsStore": "desktop"/d' "${HOME}/.docker/config.json"
+  fi
+  
+  echo "[macOS] Docker installed. Start with 'colima start' then use 'docker' and 'docker-compose' commands normally."
+  echo "[macOS] Colima provides a lightweight Docker runtime without Docker Desktop."
+elif ! command -v colima >/dev/null 2>&1; then
+  echo "[macOS] Installing Colima (Docker already present)…"
+  brew install colima
+  
+  # Clean up Docker Desktop credential store when switching to Colima
+  if [ -f "${HOME}/.docker/config.json" ] && grep -q '"credsStore": "desktop"' "${HOME}/.docker/config.json"; then
+    echo "[macOS] Removing Docker Desktop credential store from config..."
+    sed -i '' '/"credsStore": "desktop"/d' "${HOME}/.docker/config.json"
+  fi
+  
+  echo "[macOS] Colima installed. You can switch from Docker Desktop by stopping it and running 'colima start'."
+fi
+
+# --- Docker Compose (if Docker exists but Compose doesn't) ---
+if command -v docker >/dev/null 2>&1 && ! command -v docker-compose >/dev/null 2>&1; then
+  echo "[macOS] Installing docker-compose…"
+  brew install docker-compose
 fi
 
 # --- GitHub CLI ---
