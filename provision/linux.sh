@@ -27,6 +27,14 @@ fi
 # --- asdf prerequisites ---
 sudo apt-get install -y unzip libssl-dev zlib1g-dev
 
+# Additional dependencies for specific asdf plugins
+echo "[Linux] Installing additional dependencies for asdf plugins…"
+# For Node.js
+sudo apt-get install -y dirmngr gpg
+# For Golang builds
+sudo apt-get install -y pkg-config
+# For Terraform (typically works out of the box)
+
 # --- asdf ---
 if ! command -v asdf >/dev/null 2>&1; then
   echo "[Linux] Installing asdf…"
@@ -47,7 +55,12 @@ if ! command -v asdf >/dev/null 2>&1; then
       echo ''
       echo '# asdf version manager'
       echo '. "$HOME/.asdf/asdf.sh"'
-      echo '. "$HOME/.asdf/completions/asdf.bash"'
+      if [ -n "${ZSH_VERSION-}" ]; then
+        echo 'fpath=(${ASDF_DIR}/completions $fpath)'
+        echo 'autoload -Uz compinit && compinit'
+      else
+        echo '. "$HOME/.asdf/completions/asdf.bash"'
+      fi
     } >> "$RC"
   fi
   # Load asdf now for this session

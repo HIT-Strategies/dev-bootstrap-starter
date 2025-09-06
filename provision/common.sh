@@ -35,13 +35,23 @@ configure_git_defaults() {
 install_asdf_plugins() {
   local platform_prefix="$1"
   
-  if [ -f "${HOME}/.tool-versions" ]; then
-    echo "[$platform_prefix] Installing asdf plugins from .tool-versions…"
+  # Look for .tool-versions in current directory first, then HOME
+  local tool_versions_file=""
+  if [ -f ".tool-versions" ]; then
+    tool_versions_file=".tool-versions"
+  elif [ -f "${HOME}/.tool-versions" ]; then
+    tool_versions_file="${HOME}/.tool-versions"
+  fi
+  
+  if [ -n "$tool_versions_file" ]; then
+    echo "[$platform_prefix] Installing asdf plugins from $tool_versions_file…"
     asdf plugin list || true
-    awk '{print $1}' "${HOME}/.tool-versions" | while read -r plugin; do
+    awk '{print $1}' "$tool_versions_file" | while read -r plugin; do
       asdf plugin add "$plugin" || true
     done
     asdf install
+  else
+    echo "[$platform_prefix] No .tool-versions file found in current directory or HOME"
   fi
 }
 
