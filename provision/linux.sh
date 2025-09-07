@@ -4,6 +4,9 @@ set -euo pipefail
 # Source common functions
 source "$(dirname "$0")/common.sh"
 
+# Configuration variables
+ASDF_VERSION="${ASDF_VERSION:-v0.16.0}"
+
 # Detect WSL vs native Ubuntu
 IS_WSL=0
 grep -qi microsoft /proc/version && IS_WSL=1
@@ -37,34 +40,43 @@ sudo apt-get install -y pkg-config
 
 # --- asdf ---
 if ! command -v asdf >/dev/null 2>&1; then
-  echo "[Linux] Installing asdf…"
-  # Install to $HOME/.asdf (official)
-  if [ ! -d "${HOME}/.asdf" ]; then
-    git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf"
-    cd "${HOME}/.asdf"
-    git checkout "v0.16.0"
-  fi
+  echo "[Linux] Installing asdf ${ASDF_VERSION}…"
+  
+  # Remove any existing installation
+  rm -rf "${HOME}/.asdf"
+  
+  # Clone and checkout specific version
+  git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf" --branch "${ASDF_VERSION}"
+  
   # Shell integration (zsh OR bash)
   if [ -n "${ZSH_VERSION-}" ]; then
     RC="${HOME}/.zshrc"
   else
     RC="${HOME}/.bashrc"
   fi
-  if ! grep -q 'asdf.sh' "$RC"; then
-    {
-      echo ''
-      echo '# asdf version manager'
-      echo '. "$HOME/.asdf/asdf.sh"'
-      if [ -n "${ZSH_VERSION-}" ]; then
-        echo 'fpath=(${ASDF_DIR}/completions $fpath)'
-        echo 'autoload -Uz compinit && compinit'
-      else
-        echo '. "$HOME/.asdf/completions/asdf.bash"'
-      fi
-    } >> "$RC"
+  
+  # Remove any existing asdf lines first
+  if [ -f "$RC" ]; then
+    sed -i '/asdf/d' "$RC"
   fi
+  
+  # Add fresh asdf configuration
+  {
+    echo ''
+    echo '# asdf version manager'
+    echo '. "$HOME/.asdf/asdf.sh"'
+    if [ -n "${ZSH_VERSION-}" ]; then
+      echo 'fpath=(${ASDF_DIR}/completions $fpath)'
+      echo 'autoload -Uz compinit && compinit'
+    else
+      echo '. "$HOME/.asdf/completions/asdf.bash"'
+    fi
+  } >> "$RC"
+  
   # Load asdf now for this session
   . "${HOME}/.asdf/asdf.sh"
+  
+  echo "[Linux] asdf ${ASDF_VERSION} installed successfully"
 fi
 
 # --- asdf plugins from .tool-versions (if present) ---

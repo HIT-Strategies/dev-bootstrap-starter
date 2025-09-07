@@ -4,6 +4,9 @@ set -euo pipefail
 # Source common functions
 source "$(dirname "$0")/common.sh"
 
+# Configuration variables
+ASDF_VERSION="${ASDF_VERSION:-v0.16.0}"
+
 # --- Homebrew ---
 if ! command -v brew >/dev/null 2>&1; then
   echo "[macOS] Installing Homebrew…"
@@ -32,14 +35,35 @@ fi
 
 # --- asdf ---
 if ! command -v asdf >/dev/null 2>&1; then
-  echo "[macOS] Installing asdf…"
-  brew install asdf
-  # Ensure asdf is loaded for future shells
-  if ! grep -q 'asdf.sh' "${HOME}/.zshrc" 2>/dev/null; then
-    echo -e '\n# asdf version manager\n. $(brew --prefix)/opt/asdf/libexec/asdf.sh' >> "${HOME}/.zshrc"
+  echo "[macOS] Installing asdf ${ASDF_VERSION}…"
+  
+  # Remove any existing installation
+  rm -rf "${HOME}/.asdf"
+  
+  # Clone and checkout specific version
+  git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf" --branch "${ASDF_VERSION}"
+  
+  # Shell integration (zsh is default on macOS)
+  RC="${HOME}/.zshrc"
+  
+  # Remove any existing asdf lines first
+  if [ -f "$RC" ]; then
+    sed -i '' '/asdf/d' "$RC"
   fi
-  # Load asdf for current session
-  . $(brew --prefix)/opt/asdf/libexec/asdf.sh
+  
+  # Add fresh asdf configuration
+  {
+    echo ''
+    echo '# asdf version manager'
+    echo '. "$HOME/.asdf/asdf.sh"'
+    echo 'fpath=(${ASDF_DIR}/completions $fpath)'
+    echo 'autoload -Uz compinit && compinit'
+  } >> "$RC"
+  
+  # Load asdf now for this session
+  . "${HOME}/.asdf/asdf.sh"
+  
+  echo "[macOS] asdf ${ASDF_VERSION} installed successfully"
 fi
 
 # --- asdf plugins (optional; use .tool-versions if present) ---
