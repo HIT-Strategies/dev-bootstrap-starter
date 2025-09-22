@@ -5,7 +5,7 @@ set -euo pipefail
 source "$(dirname "$0")/common.sh"
 
 # Configuration variables
-ASDF_VERSION="${ASDF_VERSION:-v0.16.0}"
+ASDF_VERSION="${ASDF_VERSION:-v0.18.0}"
 
 # --- Homebrew ---
 if ! command -v brew >/dev/null 2>&1; then

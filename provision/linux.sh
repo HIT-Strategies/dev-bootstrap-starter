@@ -5,7 +5,7 @@ set -euo pipefail
 source "$(dirname "$0")/common.sh"
 
 # Configuration variables
-ASDF_VERSION="${ASDF_VERSION:-v0.16.0}"
+ASDF_VERSION="${ASDF_VERSION:-v0.18.0}"
 
 # Detect WSL vs native Ubuntu
 IS_WSL=0
@@ -13,7 +13,7 @@ grep -qi microsoft /proc/version && IS_WSL=1
 
 echo "[Linux] Updating apt…"
 sudo apt-get update -y
-sudo apt-get install -y curl git build-essential ca-certificates
+sudo apt-get install -y curl git build-essential ca-certificates make
 
 # --- neovim ---
 if ! command -v nvim >/dev/null 2>&1; then
@@ -41,25 +41,71 @@ sudo apt-get install -y pkg-config
 # --- asdf ---
 if ! command -v asdf >/dev/null 2>&1; then
   echo "[Linux] Installing asdf ${ASDF_VERSION}…"
-  
+
   # Remove any existing installation
   rm -rf "${HOME}/.asdf"
-  
-  # Clone and checkout specific version
-  git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf" --branch "${ASDF_VERSION}"
-  
+
+  # For WSL/Windows, install from source with build dependencies
+  if [ "$IS_WSL" -eq 1 ]; then
+    echo "[WSL] Installing asdf from source for better Windows/WSL compatibility…"
+
+    # Ensure git is available
+    if ! command -v git >/dev/null 2>&1; then
+      echo "[WSL] Installing git (required for asdf source installation)…"
+      sudo apt-get install -y git
+    fi
+
+    # Check if Go is needed for building asdf and install temporarily if necessary
+    TEMP_GO_INSTALLED=0
+    if ! command -v go >/dev/null 2>&1; then
+      echo "[WSL] Installing Go temporarily for asdf build…"
+      sudo apt-get install -y golang-go
+      TEMP_GO_INSTALLED=1
+    fi
+
+    # Clone and checkout specific version
+    git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf" --branch "${ASDF_VERSION}"
+
+    # Build asdf from source
+    cd "${HOME}/.asdf"
+    make build
+
+    # Copy the binary to a directory in PATH
+    sudo mkdir -p /usr/local/bin
+    sudo cp asdf /usr/local/bin/asdf
+    sudo chmod +x /usr/local/bin/asdf
+
+    # Verify the binary is in PATH
+    if command -v asdf >/dev/null 2>&1; then
+      echo "[WSL] asdf binary successfully installed to /usr/local/bin"
+    else
+      echo "[WSL] Warning: asdf binary not found in PATH after installation"
+    fi
+    cd -
+
+    # Clean up temporary Go installation if we installed it
+    if [ "$TEMP_GO_INSTALLED" -eq 1 ]; then
+      echo "[WSL] Removing temporary Go installation (will be managed by asdf)…"
+      sudo apt-get remove -y golang-go
+      sudo apt-get autoremove -y
+    fi
+  else
+    # Regular Linux installation (non-WSL)
+    git clone https://github.com/asdf-vm/asdf.git "${HOME}/.asdf" --branch "${ASDF_VERSION}"
+  fi
+
   # Shell integration (zsh OR bash)
   if [ -n "${ZSH_VERSION-}" ]; then
     RC="${HOME}/.zshrc"
   else
     RC="${HOME}/.bashrc"
   fi
-  
+
   # Remove any existing asdf lines first
   if [ -f "$RC" ]; then
     sed -i '/asdf/d' "$RC"
   fi
-  
+
   # Add fresh asdf configuration
   {
     echo ''
@@ -72,10 +118,10 @@ if ! command -v asdf >/dev/null 2>&1; then
       echo '. "$HOME/.asdf/completions/asdf.bash"'
     fi
   } >> "$RC"
-  
+
   # Load asdf now for this session
   . "${HOME}/.asdf/asdf.sh"
-  
+
   echo "[Linux] asdf ${ASDF_VERSION} installed successfully"
 fi
 
